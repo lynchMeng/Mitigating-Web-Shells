@@ -65,20 +65,6 @@ private rule passwordProtection
         (any of them) 
 }
 
-private rule hiddenInAFile
-{
-    meta:
-        source = "https://github.com/jvoisin/php-malware-finder/blob/master/php-malware-finder/php.yar"
-
-    strings:
-        $gif = {47 49 46 38 ?? 61} // GIF8[version]a
-        $png = {89 50 4E 47 0D 0a 1a 0a} // \X89png\X0D\X0A\X1A\X0A
-        $jpeg = {FF D8 FF E0 ?? ?? 4A 46 49 46 } // https://raw.githubusercontent.com/corkami/pics/master/JPG.png
-
-    condition:
-        $gif at 0 or $png at 0 or $jpeg at 0
-}
-
 private rule generic_jsp
 {
     meta:
@@ -182,7 +168,7 @@ rule suspiciousFunctionality
         description = "Artifacts common to web shells and somewhat rare in benign files"
 
     condition:
-        passwordProtection or hiddenInAFile or hardcoded_urldecode or fopo or eval
+        passwordProtection or phpInImage or hardcoded_urldecode or fopo or eval
 }
 
 rule obfuscatedFunctionality
