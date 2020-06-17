@@ -6,7 +6,7 @@
 private rule b374k
 {
     meta:
-        author = "Blair Gillam (@blairgillam)”
+        author = "Blair Gillam (@blairgillam)"
 
     strings:
         $string = "b374k"
@@ -65,6 +65,20 @@ private rule passwordProtection
         (any of them) 
 }
 
+private rule hiddenInAFile
+{
+    meta:
+        source = "https://github.com/jvoisin/php-malware-finder/blob/master/php-malware-finder/php.yar"
+
+    strings:
+        $gif = {47 49 46 38 ?? 61} // GIF8[version]a
+        $png = {89 50 4E 47 0D 0a 1a 0a} // \X89png\X0D\X0A\X1A\X0A
+        $jpeg = {FF D8 FF E0 ?? ?? 4A 46 49 46 } // https://raw.githubusercontent.com/corkami/pics/master/JPG.png
+
+    condition:
+        $gif at 0 or $png at 0 or $jpeg at 0
+}
+
 private rule generic_jsp
 {
     meta:
@@ -92,7 +106,7 @@ private rule eval
 private rule fopo
 {
     meta:
-        source = ”https://github.com/tenable/yara-rules/blob/master/webshells/"
+        source = "https://github.com/tenable/yara-rules/blob/master/webshells/"
 
     strings:
         $ = /\$[a-zA-Z0-9]+=\"\\(142|x62)\\(141|x61)\\(163|x73)\\(145|x65)\\(66|x36)\\(64|x34)\\(137|x5f)\\(144|x64)\\(145|x65)\\(143|x63)\\(157|x6f)\\(144|x64)\\(145|x65)\";@eval\(/
@@ -104,7 +118,7 @@ private rule fopo
 private rule hardcoded_urldecode
 {
     meta:
-        source = ”https://github.com/tenable/yara-rules/blob/master/webshells/"
+        source = "https://github.com/tenable/yara-rules/blob/master/webshells/"
 
     strings:
         $ = /urldecode[\t ]*\([\t ]*'(%[0-9a-fA-F][0-9a-fA-F])+'[\t ]*\)/
@@ -116,7 +130,7 @@ private rule hardcoded_urldecode
 private rule chr_obfuscation
 {
     meta:
-        source = ”https://github.com/tenable/yara-rules/blob/master/webshells/"
+        source = "https://github.com/tenable/yara-rules/blob/master/webshells/"
 
     strings:
         $ = /\$[^=]+=[\t ]*(chr\([0-9]+\)\.?){2,}/
